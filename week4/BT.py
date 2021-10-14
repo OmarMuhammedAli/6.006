@@ -1,9 +1,9 @@
 class Binary_Node:
-    def __init__(A, data):
+    def __init__(A, data, parent=None):
         A.data = data
         A.left = None
         A.right = None
-        A.parent = None
+        A.parent = parent
 
     # Traversal methods
     def subtree_itr(A, order='inorder'):
@@ -73,25 +73,42 @@ class Binary_Node:
             A.right.subtree_min().left, B.parent = B, A.right.subtree_min()
         else:
             A.right, B.parent = B, A
-
+    
+    def subtree_delete(A):
+        print(f'parent: {A.parent.data}' if A.parent else 'parent: None')
+        if A.left or A.right:
+            B = A.predecessor() if A.left else A.successor()
+            A.data, B.data = B.data, A.data
+            return B.subtree_delete()
+        
+        if A.parent:
+            print(f'A.data = {A.data}')
+            if A.parent.left == A:
+                A.parent.left = None
+            else:
+                A.parent.right = None
+        return A
+    
+    def print_subtree(A, order='inorder'):
+        for i in A.subtree_itr(order):
+            print(i.data, end=' ')
+        print()
 def main():
     root = Binary_Node(10)
-    root.left = Binary_Node(6)
-    root.right = Binary_Node(14)
-    root.left.left = Binary_Node(4)
-    root.left.right = Binary_Node(8)
-    root.right.left = Binary_Node(12)
-    root.right.right = Binary_Node(16)
-    node = Binary_Node(7)
-    root.insert_before(node)
-    node2 = Binary_Node(11)
-    root.insert_after(node2)
-    for i in root.subtree_itr():
-        print(i.data, end=' ')
+    root.left = Binary_Node(6, parent=root)
+    root.right = Binary_Node(14, parent=root)
+    root.left.left = Binary_Node(4, parent=root.left)
+    root.left.right = Binary_Node(8, parent=root.left)
+    root.right.left = Binary_Node(12, parent=root.right)
+    root.right.right = Binary_Node(16, parent=root.right)
+    root.print_subtree()
+    print(root.right.left.subtree_delete().data)
+    print('\nafter deletion: ')
+    root.print_subtree()
     
-    print(f'\nmin: {root.subtree_min().data}')
-    print(f'max: {root.subtree_max().data}')
-    print(f'successor: {root.successor().data}')
-    print(f'predecessor: {root.predecessor().data}')
+    # print(f'\nmin: {root.subtree_min().data}')
+    # print(f'max: {root.subtree_max().data}')
+    # print(f'successor: {root.successor().data}')
+    # print(f'predecessor: {root.predecessor().data}')
 if __name__ == '__main__':
     main()
