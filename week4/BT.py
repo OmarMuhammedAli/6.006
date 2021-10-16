@@ -111,14 +111,14 @@ class Binary_Tree:
         A = [item for item in data]
         def build_subtree(A, i, j):
             c = (i+j)//2
-            root = self.Node_Type(A[c])
+            node = self.Node_Type(A[c])
             if i < c:
-                root.left = build_subtree(A, i, c-1)
-                root.left.parent = root
+                node.left = build_subtree(A, i, c-1)
+                node.left.parent = node
             if c < j:
-                root.right = build_subtree(A, c+1, j)
-                root.right.parent = root
-            return root
+                node.right = build_subtree(A, c+1, j)
+                node.right.parent = node
+            return node
         self.root = build_subtree(A, 0, len(A)-1)
         self.size = len(A)
     
